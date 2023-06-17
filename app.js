@@ -149,7 +149,7 @@ app.post("/login", async function (req, res) {
       return;
     }
     else {
-      if (result[0].password == userData.password) {
+      if (result[0].password != userData.password) {
         const errorMessage = 'Wrong password entered!';
         res.redirect('/login?error=' + errorMessage);
         return;
