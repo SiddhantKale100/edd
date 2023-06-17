@@ -137,12 +137,12 @@ app.post("/login", async function (req, res) {
     const collection = database.collection('UserCredentials');
     const query = { email: userData.email };
     const result = await collection.find(query).toArray();
-    let details = {
-      from: "siddhantkale300@gmail.com",
-      to: userData.email,
-      subject: "Here is the email verification code for your sign up",
-      text: code.toString(),
-    }
+    // let details = {
+    //   from: "siddhantkale300@gmail.com",
+    //   to: userData.email,
+    //   subject: "Here is the email verification code for your sign up",
+    //   text: code.toString(),
+    // }
     if (result.length === 0) {
       const errorMessage = 'No account exists with that email. Sign up instead!';
       res.redirect('/login?error=' + errorMessage);
