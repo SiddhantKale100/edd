@@ -161,7 +161,7 @@ app.post("/login", async function (req, res) {
             from: "siddhantkale300@gmail.com",
             to: userData.email,
             subject: "We found an unrecognized login on your account from other device",
-            text: "If it was not you please change your password . If it was you enter this verification code" + code.toString(),
+            text: "If it was not you please change your password . If it was you enter this verification code    " + code.toString(),
           }
           mailTransporter.sendMail(details, function (err) {
             res.sendFile("/codec.html", { root: "public" });
