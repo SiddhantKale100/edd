@@ -183,7 +183,7 @@ app.post("/codec",function(req,res){
   const usercode = req.body;
   try {
     if (usercode.code == code) {
-      res.sendFile("/login.html", { root: "public" });
+      res.sendFile("/success.html", { root: "public" });
     }
     else {
       const errorMessage = 'Wrong code entered. If not your account sign up below.';
