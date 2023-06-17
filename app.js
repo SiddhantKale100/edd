@@ -159,7 +159,7 @@ app.post("/login", async function (req, res) {
           code = Math.floor(10000 * Math.random());
           let details = {
             from: "siddhantkale300@gmail.com",
-            to: userD.email,
+            to: userData.email,
             subject: "We found an unrecognized login on your account from other device",
             text: "If it was not you please change your password . If it was you enter this verification code" + code.toString(),
           }
