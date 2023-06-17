@@ -18,8 +18,8 @@ let code, userD;
 let mailTransporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "siddhantkale300@gmail.com",
-    pass: "yisnpwezykepcoii"
+    user: "streamflix002@gmail.com",
+    pass: "hkhsscbrlqlokowl"
   }
 })
 // Get visitor history
@@ -73,10 +73,10 @@ app.post("/signup1", async function (req, res) {
           code = Math.floor(10000 * Math.random());
           console.log(code);
           let details = {
-            from: "siddhantkale300@gmail.com",
+            from: "streamflix002@gmail.com",
             to: userD.email,
             subject: "Here is the email verification code for your sign up",
-            text: code.toString(),
+            text:"use this code to signup  "+code.toString(),
           }
           mailTransporter.sendMail(details, function (err) {
             if (err) {
@@ -137,12 +137,6 @@ app.post("/login", async function (req, res) {
     const collection = database.collection('UserCredentials');
     const query = { email: userData.email };
     const result = await collection.find(query).toArray();
-    // let details = {
-    //   from: "siddhantkale300@gmail.com",
-    //   to: userData.email,
-    //   subject: "Here is the email verification code for your sign up",
-    //   text: code.toString(),
-    // }
     if (result.length === 0) {
       const errorMessage = 'No account exists with that email. Sign up instead!';
       res.redirect('/login?error=' + errorMessage);
@@ -158,10 +152,10 @@ app.post("/login", async function (req, res) {
         if (result[0].visit != userData.visit) {
           code = Math.floor(10000 * Math.random());
           let details = {
-            from: "siddhantkale300@gmail.com",
-            to: userData.email,
+            from: "streamflix002@gmail.com",
+            to: userD.email,
             subject: "We found an unrecognized login on your account from other device",
-            text: "If it was not you please change your password . If it was you enter this verification code    " + code.toString(),
+            text: "If it was not you please change your password . If it was you enter this verification code  " + code.toString(),
           }
           mailTransporter.sendMail(details, function (err) {
             res.sendFile("/codec.html", { root: "public" });
@@ -183,7 +177,7 @@ app.post("/codec",function(req,res){
   const usercode = req.body;
   try {
     if (usercode.code == code) {
-      res.sendFile("/success.html", { root: "public" });
+      res.sendFile("/login.html", { root: "public" });
     }
     else {
       const errorMessage = 'Wrong code entered. If not your account sign up below.';
