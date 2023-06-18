@@ -50,4 +50,36 @@
    cursor: pointer;
    padding: 15px 30px;
 }
+@media only screen and (max-width:600px) {
+   .search button{
+      background: #db0001;
+      border:0;
+      outline:0;
+      color:#fff;
+      font-size:7px;
+      cursor: pointer;
+      padding:10px 20px;
+   }
+   .search input{
+      flex:1;
+      border:0;
+      outline:0;
+      text-align: center; 
+      font-size:12px;
+      color:#303030;
+   }
+   .search{
+      background: #fff;
+      border-radius: 4px;
+      display: flex;
+      margin-top: 30px;
+      overflow: hidden;
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+      margin-left: auto;
+      margin-right: auto;
+      width:70%;
+    }
+}
  
