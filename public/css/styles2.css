@@ -36,16 +36,17 @@ input {
    margin-top: 20px;
    width: 320px;
    height: 47px;
-   background-color: #333;
+   background-color:#fff;
    border-radius: 3px;
    border: none;
    font-size: 20px;
+   
 }
 
 input::placeholder {
    font-size: 17px;
    margin-left: 15px;
-   padding: 12px;
+   padding: 12px
 }
 
 input[type=submit] {
