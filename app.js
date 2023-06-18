@@ -14,7 +14,7 @@ const FingerprintJS = require('@fingerprintjs/fingerprintjs-pro');
 //   .then(result => console.log(result.visitorId))
 // Init client with the given region and the secret api_key
 const clientF = new FingerprintJsServerApiClient({ region: Region.Global, apiKey: "mhvKGtvOrTg6eDiLLO3c" });
-let code, userD;
+let code, userD,result;
 let mailTransporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -53,7 +53,13 @@ app.get("/login", async function () {
 //take user data from signup page 
 app.post("/signup1", async function (req, res) {
   try {
-    userD = req.body;
+    userD = {
+       name:req.body.name,
+       email:req.body.email,
+       password:req.body.password,
+       visit:[]
+    };
+    userD.visit.push(req.body.visit);
     // Connect to the MongoDB cluster
     await client.connect();
     const database = client.db('Mindscript');
@@ -67,8 +73,8 @@ app.post("/signup1", async function (req, res) {
       try {
         // Select the database and collection
         const query = { email: userD.email };
-        const result = await collection.find(query).toArray();
-        if (result.length === 0) {
+        const resu = await collection.find(query).toArray();
+        if (resu.length === 0) {
           // const insertResult = await collection.insertOne(userData);
           code = Math.floor(10000 * Math.random());
           console.log(code);
@@ -115,7 +121,7 @@ app.post("/code", async function (req, res) {
     const collection = database.collection('UserCredentials');
     if (usercode.code == code) {
       const insertResult = await collection.insertOne(userD);
-      res.sendFile("/login.html", { root: "public" });
+      res.sendFile("/success.html", { root: "public" });
     }
     else {
       const errorMessage = 'Wrong code entered . Check your email for code';
@@ -130,27 +136,32 @@ app.post("/code", async function (req, res) {
 
 //check login data while signup
 app.post("/login", async function (req, res) {
-  const userData = req.body;
+  userD = req.body;
   try {
     await client.connect();
     const database = client.db('Mindscript');
     const collection = database.collection('UserCredentials');
-    const query = { email: userData.email };
-    const result = await collection.find(query).toArray();
+    const query = { email: userD.email };
+     result = await collection.find(query).toArray();
     if (result.length === 0) {
       const errorMessage = 'No account exists with that email. Sign up instead!';
       res.redirect('/login?error=' + errorMessage);
       return;
     }
     else {
-      if (result[0].password != userData.password) {
+      if (result[0].password != userD.password) {
         const errorMessage = 'Wrong password entered!';
         res.redirect('/login?error=' + errorMessage);
         return;
       }
       else {
-        if (result[0].visit != userData.visit) {
-          code = Math.floor(10000 * Math.random());
+        for(var i=0;i<result[0].visit.length;i++){
+          if(result[0].visit[i]==userD.visit){
+            res.sendFile("/success.html", { root: "public" });
+            return;
+          }
+        }
+        code = Math.floor(10000 * Math.random());
           let details = {
             from: "streamflix002@gmail.com",
             to: userD.email,
@@ -160,10 +171,6 @@ app.post("/login", async function (req, res) {
           mailTransporter.sendMail(details, function (err) {
             res.sendFile("/codec.html", { root: "public" });
           })
-        }
-        else {
-          res.sendFile("/success.html", { root: "public" });
-        }
       }
     }
     await client.close();
@@ -177,6 +184,7 @@ app.post("/codec",function(req,res){
   const usercode = req.body;
   try {
     if (usercode.code == code) {
+      result[0].visit.push(userD.visit);
       res.sendFile("/success.html", { root: "public" });
     }
     else {
