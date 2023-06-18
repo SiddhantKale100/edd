@@ -142,7 +142,7 @@ app.post("/login", async function (req, res) {
     const database = client.db('Mindscript');
     const collection = database.collection('UserCredentials');
     const query = { email: userD.email };
-     result = await collection.find(query).toArray();
+    result = await collection.find(query).toArray();
     if (result.length === 0) {
       const errorMessage = 'No account exists with that email. Sign up instead!';
       res.redirect('/login?error=' + errorMessage);
@@ -158,6 +158,7 @@ app.post("/login", async function (req, res) {
         for(var i=0;i<result[0].visit.length;i++){
           if(result[0].visit[i]==userD.visit){
             res.sendFile("/success.html", { root: "public" });
+            await client.close();
             return;
           }
         }
@@ -180,11 +181,26 @@ app.post("/login", async function (req, res) {
   }
 });
 
-app.post("/codec",function(req,res){
+app.post("/codec",async function(req,res){
   const usercode = req.body;
   try {
     if (usercode.code == code) {
+      await client.connect();
+      const database = client.db('Mindscript');
+      const collection = database.collection('UserCredentials');
+      const query = { email: userD.email };
       result[0].visit.push(userD.visit);
+      const update = { $set: {visit:result[0].visit} };
+      collection.updateOne(query, update, function(err, result) {
+        if (err) {
+          console.error('Error updating document', err);
+          return;
+        }
+        console.log('Document updated successfully');
+        client.close();
+      });
+    
+      
       res.sendFile("/success.html", { root: "public" });
     }
     else {
