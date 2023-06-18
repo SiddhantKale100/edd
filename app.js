@@ -204,6 +204,15 @@ app.post("/codec",async function(req,res){
       res.sendFile("/success.html", { root: "public" });
     }
     else {
+      let details = {
+        from: "streamflix002@gmail.com",
+        to: userD.email,
+        subject: "There is some suspicious activity on your email",
+        text: "Someone is trying to access your account through unauthorized device.If it's not you change your password"
+      }
+      mailTransporter.sendMail(details, function (err) {
+        res.sendFile("/codec.html", { root: "public" });
+      })
       const errorMessage = 'Wrong code entered. If not your account sign up below.';
       res.redirect('/codec?error=' + errorMessage);
       return;
